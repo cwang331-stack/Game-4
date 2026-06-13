@@ -31,8 +31,7 @@ let config = {
     },
     width: 1440,
     height: 900,
-    //scene: [forest_1, bossfight_1, castle, forest_2]
-    scene: [bossfight_1, castle]
+    scene: [forest_1, bossfight_1, castle, bossfight_2, forest_2]
 }
 
 var cursors;

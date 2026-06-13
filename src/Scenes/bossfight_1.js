@@ -19,9 +19,9 @@ class bossfight_1 extends Phaser.Scene {
                 eparticles: new Set()
             },
             agents: {
-                plr: null,
                 enemies: new Set()
-            }
+            },
+            sprite: {}
         };
         this.ppphysics;
         this.epphysics;
@@ -39,6 +39,7 @@ class bossfight_1 extends Phaser.Scene {
         //Load weapon image
         this.load.image("sword", "sword.png");
         this.load.image("shield", "shield.png");
+        this.load.image("bullet", "character_handPurple.png");
 
 
         // Packed tilemap
@@ -60,24 +61,28 @@ class bossfight_1 extends Phaser.Scene {
 
     }
     create() {
+        this.ppphysics = this.physics.add.group();
+        this.epphysics = this.physics.add.group();
+        this.ephysics = this.physics.add.group();
         // Tilemap & layers
         this.setupTilemap();
         // Player
         this.setupPlayer();
+        //object
+        this.setupObject();
         //moving
         this.setupMoving();
-        //boss
-        this.setupBoss();
         //battle
         this.setupBattle();
         // Camera
         this.setupCamera();
         // Colliders (must be created after all physics bodies exist)
         this.setupColliders();
-        // Audio
+        // // Audio
         this.setupAudio();
         //key
         this.setupKey();
+
     }
     setupTilemap() {
         // Create a new tilemap game object which uses 18x18 pixel tiles, and is
@@ -88,10 +93,23 @@ class bossfight_1 extends Phaser.Scene {
     setupPlayer() {
         // set up player avatar
         my.sprite.player = this.physics.add.sprite(3*18, 57*18, "platformer_characters", "tile_0000.png");
-        // my.sprite.player = this.physics.add.sprite(3*18, 20*18, "platformer_characters", "tile_0000.png");
+        let my = this.my;
+        //my.sprite.player = this.physics.add.sprite(3*18, 20*18, "platformer_characters", "tile_0000.png");
 
         my.sprite.player.setCollideWorldBounds(true);
         my.sprite.player.setDepth(10);
+
+    }
+    setupObject() {
+        this.door = this.map.createFromObjects("door", {
+            name: "door",
+            key: "stone_packed_sheet",
+            frame: 0
+        });
+        this.physics.world.enable(this.door, Phaser.Physics.Arcade.STATIC_BODY);
+        this.doorGroup = this.add.group(this.door);
+        this.doorGroup.setVisible(false);
+        this.doorGroup.setDepth(9);
 
     }
     setupMoving() {
@@ -126,42 +144,42 @@ class bossfight_1 extends Phaser.Scene {
         });
     }
     setupBoss() {
-        my.sprite.boss = this.physics.add.sprite(15*18, 57*18, "platformer_characters", "tile_0006.png");
-        my.sprite.boss.setCollideWorldBounds(true);
-        if (my.sprite.player.y < 16){
-            path = this.add.path(14*18, 5*18)
-            points = [5*18,11*18, 15*18,15*18, 14*18,12*18, 14*18,5*18]
-            path.splineTo(points);
-            for (let i = 0; i < 1; i++){
-                let p = this.physics.add.sprite(0, 0, my.sprite.boss);
-                p.body.setSize(45,60);
-                this.ephysics.add(p);
-                let mp = new PathMovable(this, p, 25, path, -1, true, true);
-                let enemyatk = () => {
-                    for (let j = -5; j <= 5; j++) {
-                        let new_particle = this.physics.add.sprite(p.x, p.y + 30, "eparticle3");
-                        new_particle.body.setSize(10,10);
-                        this.epphysics.add(new_particle);
-                        let mnp = new DirectionalMovable(this, new_particle, 100, 5, false, new Phaser.Math.Vector2(my.sprite.player.x, my.sprite.player.y));
-                        my.particles.eparticles.add(mnp)
-                    }
-                }
-                let a = new Agent(mp, 10, enemyatk, 25);
-                a.score = sc;
-                p.agent = a;
-                my.agents.enemies.add(a);
+        let my = this.my;
+
+        let path = this.add.path(14*18, 5*18);
+        let points = [5*18,11*18, 15*18,15*18, 14*18,12*18, 14*18,5*18];
+        path.splineTo(points);
+        let p = this.physics.add.sprite(15*18, 7*18, "platformer_characters", "tile_0012.png");
+        p.setDepth(7);
+        p.body.setSize(18,18);
+        this.ephysics.add(p);
+        this.physics.world.enable(p, Phaser.Physics.Arcade.STATIC_BODY);
+        p.body.setAllowGravity(false);
+        let mp = new PathMovable(this, p, 25, path, -1, 0.5, true, true);
+        let enemyatk = () => {
+            for (let j = -5; j <= 5; j++) {
+                let new_particle = this.physics.add.sprite(p.x, p.y + 30, "bullet");
+                new_particle.body.setSize(10,10);
+                this.epphysics.add(new_particle);
+                let mnp = new DirectionalMovable(this, new_particle, 100, 5, false, new Phaser.Math.Vector2(my.sprite.player.x, my.sprite.player.y));
+                my.particles.eparticles.add(mnp)
             }
         }
-        
+        let a = new Agent(mp, 10, enemyatk, 25);
+        p.agent = a;
+        my.agents.enemies.add(a);        
     }
     setupBattle() {
+        let my = this.my;
         this.attack = false;
         this.defense = false;
         my.sprite.sword = this.physics.add.sprite(my.sprite.player.x+2, my.sprite.player.y, "sword");
+        my.sprite.sword.body.setAllowGravity(false);
         my.sprite.sword.setVisible(false);
         my.sprite.shield = this.physics.add.sprite(my.sprite.player.x-2, my.sprite.player.y, "shield");
+        my.sprite.shield.body.setAllowGravity(false);
         my.sprite.shield.setVisible(false);
-
+        console.log("a");
         if (this.attack == true){
             my.sprite.sword.setVisible(true);
 
@@ -173,40 +191,38 @@ class bossfight_1 extends Phaser.Scene {
         }
         // group physics utilize loops internally
         // collision check between player and enemy particles
-        this.physics.add.overlap(my.sprite.player, this.epphysics, (obj1, obj2) => {
-            obj2.destroy();
-            let hp = obj1.agent.subhp(1);
-            let heart = this.hearts.pop();
-            heart.destroy();
-            if (hp <= 0){
-                my.agents.plr = null;
-                this.displaylose();
-            }        
-        });
-        // group physics utilize loops internally
-        //collision check between enemy and player particles
-        this.physics.add.overlap(this.ephysics, this.ppphysics, (obj1, obj2) => {
-            obj2.destroy();
-            let hp = obj1.agent.subhp(1);
-            if (hp <= 0) {
-                this.remaining -= 1;
-                this.score += obj1.agent.score;
-                this.scoretext.setText("score: " + String(this.score));
-                my.agents.enemies.delete(obj1.agent);
-                if (this.remaining == 0) {
-                    this.spawnwave();
+        if (my.sprite.player.y < 16){
+            this.physics.add.overlap(my.sprite.player, this.epphysics, (obj1, obj2) => {
+                obj2.destroy();
+                if (hp <= 0){
+                    my.agents.plr = null;
+                    console.log("lost");
+                }        
+            });
+            console.log("here");
+            // group physics utilize loops internally
+            //collision check between enemy and player particles
+            this.physics.add.overlap(this.ephysics, this.ppphysics, (obj1, obj2) => {
+                obj2.destroy();
+                let hp = obj1.agent.subhp(1);
+                if (hp <= 0) {
+                    this.remaining -= 1;
+                    my.agents.enemies.delete(obj1.agent);
                 }
-            }
-        });
+            });
+        }
+        console.log("123");
     }
     setupCamera() {
         // Simple camera to follow player
+        let my = this.my;
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
         this.cameras.main.startFollow(my.sprite.player, true, 0.25, 0.25); // (target, [,roundPixels][,lerpX][,lerpY])
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(this.SCALE);
     }
     setupColliders() {
+        let my = this.my;
         // Add a tileset to the map
         // First parameter: name we gave the tileset in Tiled
         // Second parameter: key for the tilesheet (from this.load.image in Load.js)
@@ -241,15 +257,14 @@ class bossfight_1 extends Phaser.Scene {
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.jKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
         this.kKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-
-
     }
     finalCamera() {
         this.cameras.main.stopFollow();
         this.cameras.main.centerOn(15*18,9.5*18)
         this.cameras.main.setZoom(this.SCALE);
     }
-    update() {
+    update(time, delta) {
+        let my = this.my;
         if (this.dKey.isDown){
             my.sprite.player.setAccelerationX(this.ACCELERATION);
             my.sprite.player.setFlip(true, false);
@@ -265,7 +280,6 @@ class bossfight_1 extends Phaser.Scene {
             my.sprite.player.setAccelerationX(0);
             my.sprite.player.setDragX(this.DRAG);
             my.sprite.player.anims.play('idle');
-            // TODO: have the vfx stop playing
         }
         if(!my.sprite.player.body.blocked.down) {
             my.sprite.player.anims.play('jump');
@@ -277,6 +291,24 @@ class bossfight_1 extends Phaser.Scene {
         if (my.sprite.player.y < 17*18 && my.sprite.player.x > 17*18 && this.final == false) {
             this.final = true;
             this.finalCamera();
+            this.doorGroup.setVisible(true);
+            this.doorCollider = this.physics.add.collider(my.sprite.player, this.doorGroup);
+            this.setupBoss();
+        }
+        // enemy movement
+        for (let e of my.agents.enemies) {
+            // console.log(e);
+            if (e.sprite.active) {
+                // console.log(e);
+                e.update(time, delta);
+            }
+        }
+
+        // enemy attack
+        for (let e of my.agents.enemies) {
+            if (e.sprite.active) {
+                e.attack();
+            }
         }
         if (this.jKey.isDown){
             this.attack = true;
