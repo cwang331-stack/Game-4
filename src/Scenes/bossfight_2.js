@@ -58,6 +58,7 @@ class bossfight_2 extends Phaser.Scene {
             frameHeight: 18
         });
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+        this.load.audio("backGround2", "battle_bgm.mp3");
 
     }
     create() {
@@ -249,6 +250,7 @@ class bossfight_2 extends Phaser.Scene {
             if(this.defense == false){
                 let hp = obj1.agent.subhp(1);
                 if (hp <= 0){
+                    this.bgMusic.stop();
                     this.scene.start("dialog","bossfight2_lose")
                 }
             }       
@@ -311,8 +313,8 @@ class bossfight_2 extends Phaser.Scene {
         })
     }
     setupAudio() {
-        // this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
-        // this.bgMusic.play();
+        this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
+        this.bgMusic.play();
     }
     setupKey() {
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -394,6 +396,7 @@ class bossfight_2 extends Phaser.Scene {
             }
         }
         if (my.sprite.player.x < 5*18 && my.sprite.player.y >= 56) {
+            this.bgMusic.stop();
             this.scene.start("dialog","BossFight2")
         }
     }

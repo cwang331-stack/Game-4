@@ -59,7 +59,7 @@ class bossfight_1 extends Phaser.Scene {
             frameHeight: 18
         });
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
-        this.load.audio("backGround", "battle_bgm.mp3");
+        this.load.audio("backGround2", "battle_bgm.mp3");
         this.load.audio("got_hit", "got_hit_effect.mp3");
         this.load.audio("hit_eff", "hit_effect.mp3");
 
@@ -174,7 +174,7 @@ class bossfight_1 extends Phaser.Scene {
 
             my.particles.eparticles.add(mnp)
         }
-        let a = new Agent(mp, 0.5, enemyatk, 10);
+        let a = new Agent(mp, 0.5, enemyatk, 6);
         p.agent = a;
         my.agents.enemies.add(a);        
     }
@@ -276,7 +276,7 @@ class bossfight_1 extends Phaser.Scene {
         })
     }
     setupAudio() {
-        this.battgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
+        this.battgMusic = this.sound.add("backGround2", { volume: 0.1, loop: true });
         this.battgMusic.play();
     }
     setupKey() {

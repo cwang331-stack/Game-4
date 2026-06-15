@@ -163,10 +163,7 @@
             "Credits": {
                 "Body": "Thanks for playing \n Game by Christine Wang",
                 "Choices": [
-                    {
-                        "Text": "Start over",
-                        "End": "dialog"
-                    }
+                    
                 ]
             },
             "hidden_line": {
@@ -342,10 +339,7 @@
             "credits": {
                 "Body": "Thaks for playing! \n Game by Christine Wang",
                 "Choices": [
-                    {
-                        "Text": "Start over",
-                        "End": "dialog"
-                    }
+                   
                 ]
             }
         },
