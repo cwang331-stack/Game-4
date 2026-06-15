@@ -1,38 +1,39 @@
 {
     "Location": {
-        "Forset1": {
+        "Forest1": {
+            "start": "ft1_1",
             "ft1_1": {
-                "Body": "Once upon a time, there is a Adventurer teaverling around the word.",
+                "Body": "Once upon a time, there is an Adventurer traveling around the world.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "ft1_2"
                     }
                 ]
             },
             "ft1_2": {
-                "Body": "They have the sharpest soward and the hardest shield in the world as their partners.",
+                "Body": "They have the sharpest sword and the hardest shield in the world as their partners.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "ft1_3"
                     }
                 ]
             },
             "ft1_3": {
-                "Body": "One day on their trip, the Adventurer saw a person running out from the forest with dust and wonds.",
+                "Body": "One day on their trip, the Adventurer saw a person running out from the forest with dust and wounds.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "ft1_4"
                     }
                 ]
             },
             "ft1_4": {
-                "Body": "What happend? The Adventurer asked.\n 'There's a monster took over our kingdom!' Answered the person just exited the forst",
+                "Body": "What happend? The Adventurer asked.\n 'There's a monster took over our kingdom! Please help us!' Answered the person just exited the forest with fear on his face.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "ft1_5"
                     }
                 ]
@@ -41,69 +42,68 @@
                 "Body": "Hearing that, the Adventurer decided to get on the way of defeating the monster.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "ft1_6"
                     }
                 ]
             },
             "ft1_6": {
-                "Body": "With their best soward and shield, now they are on their way.",
+                "Body": "With their best sword and shield, Adventurer walk into the forest.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
-                        "Target": "ft1_7"
-                    }
-                ]
-            },
-            "ft1_7": {
-                "Body": "With their best soward and shield, now they are on their way.",
-                "Choices": [
-                    {
-                        "Text": "press n to go next"
-                        // "Target": "ft1_7"
+                        "Text": "The brezze sounds like pages flipping",
+                        "End": "forest_1"
                     }
                 ]
             }
 
         },
         "BossFight1": {
+            "start": "bf1_1",
             "bf1_1": {
-                "Body": "Working hard, you finally make out from the forest to the kingdom.",
+                "Body": "Working hard, the Adventurer finally make out from the forest to the kingdom.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "bf1_2"
                     }
                 ]
             },
             "bf1_2": {
-                "Body": "Follow the moster foot steps, the Adventurer make it a tower.",
+                "Body": "Follow the moster's foot steps, the Adventurer make it to a tower.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "bf1_3"
                     }
                 ]
             },
             "bf1_3": {
-                "Body": "Outside the tower, you saw lots of small monsters and other adventurers' dead body.\nThe king of the monsters must be here.",
+                "Body": "Outside the tower, they saw lots of small monsters and other adventurers' dead body.\nThe king of the monsters must be here.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
-                        "Target": "bf1_4"
+                        "Text": "Next",
+                        "Target": "bf1_5"
                     }
                 ]
             },
             "bf1_5": {
-                "Boday": "The Adventurer hold the wepons tight in their hand, step in the tower."
-            }
-        },
-        "Castle1": {
-            "c1_1": {
-                "Body": "After the hard fight, the Adventurer became the hero of the kingdom.",
+                "Body": "The Adventurer hold the wepons tight in their hand, step in the tower.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Like the heros in the story books",
+                        "End": "bossfight_1"
+                    }
+                ]
+            }
+        },
+        "Castle": {
+            "start": "c1_1",
+            "c1_1": {
+                "Body": "After the hard fight, the Adventurer defeated the monster successfully, and became the hero of the kingdom.",
+                "Choices": [
+                    {
+                        "Text": "Next",
                         "Target": "c1_2"
                     }
                 ]
@@ -112,67 +112,272 @@
                 "Body": "The citizens celerbate the great victory, and wanting to let the Adventurer to take the crown.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "c1_3"
                     }
                 ]
             },
             "c1_3": {
-                "Body": "Day flies, now is the day of coronation."
+                "Body": "Day flies, now is the day of coronation.",
+                "Choices": [
+                    {
+                        "Text": "Doesn't these just like a story plot?",
+                        "End": "castle"
+                    }
+                ]
             }
         },
         "Castle2": {
-            "c2_1": {
-                "Body": "'You' left the coronation, grab your soward and shield and rush out the castle, lefting the sounds calling you behind.",
+            "start": "c2_1_1",
+            "c2_1_1": {
+                "Body": "Finally, the hero of the kingdom, the great Adventurer is now at the place, ready to take the crown.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Take the crown",
+                        "Target": "first_ending"
+                    },
+                    {
+                        "Text": "...",
+                        "Target": "hidden_line"
+                    }
+                ]
+            },
+            "first_ending": {
+                "Body": "The great Adventurer put the crown on his head, and recived the cheers as everyone wanted.\nThe sound of the breeze flows into the Adventurer's ears with the cheers, sounding like the pages of a book flipping.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "first_ending_2"
+                    }
+                ]
+            },
+            "first_ending_2":{
+                "Body": "with the new king's protection, the people and the great Adventurer lives in the safe and wealth kingdom happily ever after.\n Story ends.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "Credits"
+                    }
+                ]
+            },
+            "Credits": {
+                "Body": "Thanks for playing \n Game by Christine Wang",
+                "Choices": [
+                    {
+                        "Text": "Start over",
+                        "End": "dialog"
+                    }
+                ]
+            },
+            "hidden_line": {
+                "Body": "'What are you waiting for?'\n Someone yell out from the crowd.",
+                "Choices": [
+                    {
+                        "Text": "Take the crown",
+                        "Target": "first_ending"
+                    },
+                    {
+                        "Text": "...",
+                        "Target": "hidden_1"
+                    }
+                ]
+            },
+            "hidden_1": {
+                "Body": "'Pick up the crown, hero!'\n More and more people shouting out, asking the great Adventurer to pick the crown.",
+                "Choices": [
+                    {
+                        "Text": "Pick up the crown",
+                        "Target": "first_ending"
+                    },
+                    {
+                        "Text": "...",
+                        "Target": "hidden_2"
+                    }
+                ]
+            },
+            "hidden_2": {
+                "Body": "...",
+                "Choices": [
+                    {
+                        "Text": "PICK UP THE CROWN",
+                        "Target": "first_ending"
+                    },
+                    {
+                        "Text": "...",
+                        "Target": "hidden_3"
+                    }
+                ]
+            },
+            "hidden_3": {
+                "Body": "Sorry I'm not trying to scare you, I just don't understand what is taking you so long. Just pick it up it's what you should be doing.",
+                "Choices": [
+                    {
+                        "Text": "Pick up the crown",
+                        "Target": "first_ending"
+                    },
+                    {
+                        "Text": "...",
+                        "Target": "hidden_4"
+                    }
+                ]
+            },
+            "hidden_4":{
+                "Body": " 'This...is not the end 'I' want' ",
+                "Choices": [
+                    {
+                        "Text": "FOLLOW THE STORY LINE",
+                        "Target": "hidden_3"
+                    },
+                    {
+                        "Text": "run",
+                        "Target": "c2_1"
+                    }
+                ]
+            },
+            "c2_1": {
+                "Body": "'I' left the coronation, grab my soward and shield and rush out from the castle, lefting the sounds calling me behind.",
+                "Choices": [
+                    {
+                        "Text": "Next",
                         "Target": "c2_2"
                     }
                 ]
             },
             "c2_2": {
-                "Body": "'We need a hero! we need a hero!\n The people chased after you, you have no place to hind.\n Accidently, you are back in the tower, in the room where the monster was.",
+                "Body": "'We need a hero! we need a hero!'\n The people who was cheering for me are now chasing after, I have no place to hind.\n Accidently, I am back in the tower, in the room where the monster was.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "c2_3"
                     }
                 ]
             },
             "c2_3": {
-                "Body": "Your soward shines with a cold gleam, your shield is still heavy and hard.\n They are ready for another fight.",
+                "Body": "My soward shines with a cold gleam, and the shield is still heavy and hard.\n They are ready for another fight.",
                 "Choices": [
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "c2_4"
                     }
                 ]
             },
             "c2_4": {
-                "Body": "You took a deapth breath, and open the door.\n The people outside the door does not have the looks they looked anymore.\n they are no different like the moster you fight before.",
+                "Body": "I took a deapth breath, and open the door.\n The people outside the door does not have the looks they looked anymore.\n They are no different like the moster I fight before.",
                 "Choices": [
                     {
-                        "Text": "press n to go next"
+                        "Text": "Next",
+                        "End": "bossfight_2"
                     }
                 ]
             }
         },
         "BossFight2": {
+            "start": "bf2_1",
             "bf2_1": {
-                "Body": "You finally make a way out from the tower.\n You heared sound echoing in your head, getting sharp.\n'No this is not right...\nYou should be back and reach the happy ending...\n This is not right..'",
+                "Body": "I finally make a way out from the tower.\n I heared sound echoing in my head, getting sharp.\n'No this is not right...\nYou should be back and reach the happy ending...\n This is not right..'",
                 "Choices":[
                     {
-                        "Text": "press n to go next",
+                        "Text": "Next",
                         "Target": "bf2_2"
                     }
                 ]
             },
             "bf2_2": {
-                "Body": "You shake your head, run into the forest.",
+                "Body": "I shake your head, run into the forest.",
                 "Choices": [
                     {
-                        "Text": "press n to start"
+                        "Text": "Next",
+                        "End": "forest_2"
+                    }
+                ]
+            }
+        },
+        "second_ending": {
+            "start": "se_1",
+            "se_1": {
+                "Body": "Finally, I escaped from the forest.\n I guess it becomes weirred because I made the story a mess.",
+                "Choices":[
+                    {
+                        "Text": "Next",
+                        "Target": "se_2"
+                    }
+                ]
+            },
+            "se_2": {
+                "Body": "I stand at the spot where before everything happend, listening to the brezze blowing out from the forest.\n They sounds like pages of a book flipping.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "se_3"
+                    }
+                ]
+            },
+            "se_3": {
+                "Body": "After a while, the brezze stoped. A person ran out from the forest with dust and wounds.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "se_4"
+                    }
+                ]
+            },
+            "se_4": {
+                "Body": "'There's a monster took over our kingdom! Please help us' says that guy.\n I laugh at it after hearing that.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "se_5"
+                    }
+                ]
+            },
+            "se_5": {
+                "Body": "That guy looks frustrated.\n I did not say a word. I waved my had and left the forest with the man behind.",
+                "Choices": [
+                    {
+                        "Text": "Next",
+                        "Target": "credits"
+                    }
+                ]
+            },
+            "credits": {
+                "Body": "Thaks for playing! \n Game by Christine Wang",
+                "Choices": [
+                    {
+                        "Text": "Start over",
+                        "End": "dialog"
+                    }
+                ]
+            }
+        },
+        "bossfight1_lose": {
+            "start": "bossfight1_lose1",
+            "bossfight1_lose1": {
+                "Body": "The Adventurer lost the fight. \nBut that's okey. They are ready to fight again",
+                "Choices": [
+                    {
+                        "Text": "Again?",
+                        "End": "bossfight_1"
+                    }
+                ]
+            }
+        },
+        "bossfight2_lose": {
+            "start": "bossfight2_lose1",
+            "bossfight2_lose1": {
+                "Body": "The great Adventurer make their mind again, choice to head back to the castle and become the king of the kingdom.",
+                "Choices": [
+                    {
+                        "Text": "...?",
+                        "Target": "bossfight2_lose2"
+                    }
+                ]
+            },
+            "bossfight2_lose2": {
+                "Body": "Now, the great Adventurer is heading back to the castle.",
+                "Choices": [
+                    {
+                        "Text": "NEXT",
+                        "Target": "castle"
                     }
                 ]
             }

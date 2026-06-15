@@ -1,6 +1,6 @@
 class bossfight_1 extends Phaser.Scene {
     constructor() {
-        super("bossfight1");
+        super("bossfight_1");
         this.xb = 800;
         this.yb = 600;
     }
@@ -19,7 +19,8 @@ class bossfight_1 extends Phaser.Scene {
                 eparticles: new Set()
             },
             agents: {
-                enemies: new Set()
+                enemies: new Set(),
+                plr: null
             },
             sprite: {}
         };
@@ -58,6 +59,9 @@ class bossfight_1 extends Phaser.Scene {
             frameHeight: 18
         });
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+        this.load.audio("backGround", "battle_bgm.mp3");
+        this.load.audio("got_hit", "got_hit_effect.mp3");
+        this.load.audio("hit_eff", "hit_effect.mp3");
 
     }
     create() {
@@ -92,12 +96,14 @@ class bossfight_1 extends Phaser.Scene {
     }
     setupPlayer() {
         // set up player avatar
-        my.sprite.player = this.physics.add.sprite(3*18, 57*18, "platformer_characters", "tile_0000.png");
         let my = this.my;
+        my.sprite.player = this.physics.add.sprite(5*18, 56*18, "platformer_characters", "tile_0000.png");
         //my.sprite.player = this.physics.add.sprite(3*18, 20*18, "platformer_characters", "tile_0000.png");
-
         my.sprite.player.setCollideWorldBounds(true);
         my.sprite.player.setDepth(10);
+        let pa = new PlayerAgent(null, 5, null, 100);
+        my.sprite.player.agent = pa;
+        my.agents.plr = pa;
 
     }
     setupObject() {
@@ -147,25 +153,28 @@ class bossfight_1 extends Phaser.Scene {
         let my = this.my;
 
         let path = this.add.path(14*18, 5*18);
-        let points = [5*18,11*18, 15*18,15*18, 14*18,12*18, 14*18,5*18];
+        let points = [5*18,11*18, 15*18,15*18, 14*18,12*18, 26*18,10*18];
         path.splineTo(points);
-        let p = this.physics.add.sprite(15*18, 7*18, "platformer_characters", "tile_0012.png");
+        let p = this.physics.add.sprite(15*18, 7*18, "platformer_characters", "tile_0008.png");
         p.setDepth(7);
-        p.body.setSize(18,18);
+        p.body.setSize(18*2,18*2);
         this.ephysics.add(p);
         this.physics.world.enable(p, Phaser.Physics.Arcade.STATIC_BODY);
         p.body.setAllowGravity(false);
-        let mp = new PathMovable(this, p, 25, path, -1, 0.5, true, true);
+        let mp = new PathMovable(this, p, 100, path, -1, 0.5, true, true);
         let enemyatk = () => {
-            for (let j = -5; j <= 5; j++) {
-                let new_particle = this.physics.add.sprite(p.x, p.y + 30, "bullet");
-                new_particle.body.setSize(10,10);
-                this.epphysics.add(new_particle);
-                let mnp = new DirectionalMovable(this, new_particle, 100, 5, false, new Phaser.Math.Vector2(my.sprite.player.x, my.sprite.player.y));
-                my.particles.eparticles.add(mnp)
-            }
+            let new_particle = this.physics.add.sprite(p.x, p.y + 10, "bullet");
+            new_particle.setScale(0.5);
+            new_particle.body.setSize(10,10);            
+            this.epphysics.add(new_particle);
+            this.physics.world.enable(new_particle, Phaser.Physics.Arcade.STATIC_BODY);
+            new_particle.body.setAllowGravity(false);
+            let mnp = new DirectionalMovable(this, new_particle, 100, 5, false, new Phaser.Math.Vector2(my.sprite.player.x - p.x, my.sprite.player.y - p.y - 10));
+            // let mnp = new DirectionalMovable(this, new_particle, 100, 5, false, new Phaser.Math.Vector2(0,-1));
+
+            my.particles.eparticles.add(mnp)
         }
-        let a = new Agent(mp, 10, enemyatk, 25);
+        let a = new Agent(mp, 0.5, enemyatk, 10);
         p.agent = a;
         my.agents.enemies.add(a);        
     }
@@ -173,45 +182,64 @@ class bossfight_1 extends Phaser.Scene {
         let my = this.my;
         this.attack = false;
         this.defense = false;
-        my.sprite.sword = this.physics.add.sprite(my.sprite.player.x+2, my.sprite.player.y, "sword");
+        this.counter = false;
+        this.countdown = 5;
+        my.sprite.sword = this.physics.add.sprite(my.sprite.player.x+10, my.sprite.player.y, "sword");
         my.sprite.sword.body.setAllowGravity(false);
+        my.sprite.sword.setDepth(11);
         my.sprite.sword.setVisible(false);
-        my.sprite.shield = this.physics.add.sprite(my.sprite.player.x-2, my.sprite.player.y, "shield");
+
+        my.sprite.shield = this.physics.add.sprite(my.sprite.player.x-10, my.sprite.player.y, "shield");
         my.sprite.shield.body.setAllowGravity(false);
+        my.sprite.shield.setDepth(11);
         my.sprite.shield.setVisible(false);
-        console.log("a");
-        if (this.attack == true){
-            my.sprite.sword.setVisible(true);
 
-        }
-        if (this.defense == true){
-            my.sprite.shield.setVisible(true);
-            this.PARTICLE_VELOCITY = 15;
 
-        }
-        // group physics utilize loops internally
-        // collision check between player and enemy particles
-        if (my.sprite.player.y < 16){
-            this.physics.add.overlap(my.sprite.player, this.epphysics, (obj1, obj2) => {
-                obj2.destroy();
-                if (hp <= 0){
-                    my.agents.plr = null;
-                    console.log("lost");
-                }        
-            });
-            console.log("here");
-            // group physics utilize loops internally
-            //collision check between enemy and player particles
-            this.physics.add.overlap(this.ephysics, this.ppphysics, (obj1, obj2) => {
-                obj2.destroy();
-                let hp = obj1.agent.subhp(1);
-                if (hp <= 0) {
-                    this.remaining -= 1;
-                    my.agents.enemies.delete(obj1.agent);
+        this.physics.add.overlap(my.sprite.player, this.ephysics, (obj1, obj2) => {
+            if(this.counter == false && this.attack == true){
+                let hp = obj2.agent.subhp(1);
+                this.attack = false;
+                this.counter = true;
+                this.countdown = 5;
+                if(hp <= 0){
+                    this.battgMusic.stop();
+                    this.scene.start("dialog","Castle")
                 }
-            });
-        }
-        console.log("123");
+            }
+        });
+        
+        this.physics.add.overlap(my.sprite.player, this.epphysics, (obj1, obj2) => {
+            obj2.destroy();
+            if(this.defense == false){
+                let hp = obj1.agent.subhp(1);
+                if (hp <= 0){
+                    this.battgMusic.stop();
+                    this.scene.start("dialog","bossfight1_lose")
+                }
+            }       
+        });
+
+        let kKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        kKey.on('down', (key, event) => {
+            my.sprite.sword.setVisible(true);
+            this.attack = true;
+        });
+        kKey.on('up', (key, event) => {
+            my.sprite.sword.setVisible(false);
+            this.attack = false;
+        });
+        let jKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+        jKey.on('down', (key, event) => {
+            my.sprite.shield.setVisible(true);
+            this.defense = true;
+            this.ACCELERATION = 50;
+        });
+        jKey.on('up', (key, event) => {
+            my.sprite.shield.setVisible(false);
+            this.defense = false;
+            this.ACCELERATION = 200;
+
+        });
     }
     setupCamera() {
         // Simple camera to follow player
@@ -248,19 +276,18 @@ class bossfight_1 extends Phaser.Scene {
         })
     }
     setupAudio() {
-        // this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
-        // this.bgMusic.play();
+        this.battgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
+        this.battgMusic.play();
     }
     setupKey() {
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.dKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.aKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.jKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
-        this.kKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+        
     }
     finalCamera() {
         this.cameras.main.stopFollow();
-        this.cameras.main.centerOn(15*18,9.5*18)
+        this.cameras.main.centerOn(15*18,9.5*18);
         this.cameras.main.setZoom(this.SCALE);
     }
     update(time, delta) {
@@ -303,24 +330,31 @@ class bossfight_1 extends Phaser.Scene {
                 e.update(time, delta);
             }
         }
-
         // enemy attack
         for (let e of my.agents.enemies) {
             if (e.sprite.active) {
                 e.attack();
             }
         }
-        if (this.jKey.isDown){
-            this.attack = true;
+        let mpep = my.particles.eparticles;
+        for (let particle of mpep) {
+            if (particle.sprite.active) {
+                particle.update(time, delta);
+            } else {
+                mpep.delete(particle);
+            }
         }
-        else {
-            this.attack = false;
+        my.sprite.sword.x = my.sprite.player.x + 10;
+        my.sprite.sword.y = my.sprite.player.y;
+
+        my.sprite.shield.x = my.sprite.player.x - 10;
+        my.sprite.shield.y = my.sprite.player.y + 5;
+        if(this.counter == true) {
+            this.countdown -= delta / 1000;
+            if (this.countdown <= 0) {
+                this.counter = false;
+            }
         }
-        if (this.kKey.isDown){
-            this.defense = true;
-        }
-        else {
-            this.defense = false;
-        }
+        
     }
 }

@@ -1,7 +1,10 @@
 class Agent {
     constructor(movable, fullcd, atkfunc = null, hp = 1) {
         this.movable = movable;
-        this.sprite = movable.sprite;
+        this.sprite = null
+        if (movable != null) {
+            this.sprite = movable.sprite;
+        }
         this.fullcd = fullcd * 1000;
         this.atkfunc = atkfunc;
         this.cd = 0;
@@ -30,7 +33,9 @@ class Agent {
     subhp(hp) {
         this.hp -= hp;
         if (this.hp <= 0) {
-            this.sprite.destroy();
+            if(this.sprite != null){
+                this.sprite.destroy();
+            }
         }
         return this.hp;
     }
@@ -45,16 +50,6 @@ class PlayerAgent extends Agent{
         this.moveAD = 0
     }
     update(time, delta){
-        if (this.moveAD == 0) {
-            let v2 = new Phaser.Math.Vector2();
-            this.movable.changedir(v2);
-        } else if (this.moveAD == -1) {
-            let v2 = new Phaser.Math.Vector2(-1,0);
-            this.movable.changedir(v2);
-        } else if (this.moveAD == 1) {
-            let v2 = new Phaser.Math.Vector2(1,0);
-            this.movable.changedir(v2);
-        }
-        super.update(time, delta);
+        // super.update(time, delta);
     }
 }

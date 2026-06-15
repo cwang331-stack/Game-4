@@ -18,6 +18,7 @@ class forest_1 extends Phaser.Scene {
         this.load.setPath("./assets/");
         // Load characters spritesheet
         this.load.atlas("platformer_characters", "tilemap-characters-packed.png", "tilemap-characters-packed.json");
+        this.load.image("sky", "background.png");    
         // Load tilemap information
         this.load.image("forest_packed_image", "tilemap_forest_packed.png");
         this.load.image("forest_packed_image(2)", "tilemap_forest_packed(2).png");   // Packed tilemap
@@ -33,6 +34,8 @@ class forest_1 extends Phaser.Scene {
             frameHeight: 18
         });
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+        this.load.audio("backGround", "forest_bm.mp3");
+
 
     }
     create(){
@@ -61,10 +64,10 @@ class forest_1 extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     }
     setupBackground() {
-        // this.background = this.add.tileSprite(0, 0, 1640, 900, "sky");
-        // this.background.setOrigin(0, 0);
-        // this.background.setScrollFactor(0.3, 1);
-        // this.background.setDepth(-1);
+        this.background = this.add.tileSprite(0, 0, 1640, 900, "sky");
+        this.background.setOrigin(0, 0);
+        this.background.setScrollFactor(0.3, 1);
+        this.background.setDepth(-1);
     }
     setupPlayer() {
         // set up player avatar
@@ -105,8 +108,8 @@ class forest_1 extends Phaser.Scene {
         })
     }
     setupAudio() {
-        // this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
-        // this.bgMusic.play();
+        this.bgMusic  = this.sound.add('backGround',  { volume: 0.5, loop: true });
+        this.bgMusic.play();
     }
     setupKey() {
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -166,6 +169,10 @@ class forest_1 extends Phaser.Scene {
         }  
         if(my.sprite.player.body.blocked.down && this.spaceKey.isDown) {
             my.sprite.player.body.setVelocityY(this.JUMP_VELOCITY);
+        }
+        if (my.sprite.player.x > 89*18) {
+            this.bgMusic.stop();
+            this.scene.start("dialog","BossFight1")
         }
     }
 }

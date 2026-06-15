@@ -6,7 +6,7 @@ class castle extends Phaser.Scene {
     }
     init() {
         // variables and settings
-        this.ACCELERATION = 200;
+        this.ACCELERATION = 100;
         this.DRAG = 500;    // DRAG < ACCELERATION = icy slide
         this.physics.world.gravity.y = 1000;
         this.JUMP_VELOCITY = -300;
@@ -17,6 +17,8 @@ class castle extends Phaser.Scene {
         this.load.setPath("./assets/");
         // Load characters spritesheet
         this.load.atlas("platformer_characters", "tilemap-characters-packed.png", "tilemap-characters-packed.json");
+        this.load.image("sky", "background.png");    
+
         // Load tilemap information
         this.load.image("stone_packed_image", "stone_packed.png");
         this.load.image("forest_packed_image", "tilemap_forest_packed.png");
@@ -37,11 +39,15 @@ class castle extends Phaser.Scene {
             frameHeight: 18
         });
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+        this.load.audio("backGround", "forest_bm.mp3");
+
 
     }
     create() {
         // Tilemap & layers
         this.setupTilemap();
+        // Background parallax
+        this.setupBackground();
         // Player
         this.setupPlayer();
         //npc
@@ -70,6 +76,12 @@ class castle extends Phaser.Scene {
         // set up player avatar
         my.sprite.player = this.physics.add.sprite(0*18, 10*18, "platformer_characters", "tile_0000.png");
         my.sprite.player.setCollideWorldBounds(true);
+    }
+    setupBackground() {
+        this.background = this.add.tileSprite(0, 0, 1640, 900, "sky");
+        this.background.setOrigin(0, 0);
+        this.background.setScrollFactor(0.3, 1);
+        this.background.setDepth(-1);
     }
     setupObject() {
         this.sword = this.map.createFromObjects("sword", {
@@ -139,8 +151,8 @@ class castle extends Phaser.Scene {
         })
     }
     setupAudio() {
-        // this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
-        // this.bgMusic.play();
+        this.bgMusic = this.sound.add("backGround", { volume: 0.5, loop: true });
+        this.bgMusic.play();
     }
     setupKey() {
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -200,6 +212,10 @@ class castle extends Phaser.Scene {
         }  
         if(my.sprite.player.body.blocked.down && this.spaceKey.isDown) {
             my.sprite.player.body.setVelocityY(this.JUMP_VELOCITY);
+        }
+        if (my.sprite.player.x > 16*18) {
+            this.bgMusic.stop();
+            this.scene.start("dialog","Castle2")
         }
     }
 }
